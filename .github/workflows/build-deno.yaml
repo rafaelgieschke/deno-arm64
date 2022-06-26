@@ -48,6 +48,8 @@ jobs:
           # - linux-arm
     steps:
       - uses: docker-practice/actions-setup-docker@master
+      - run: |
+          cat ~/.docker/daemon.json
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install QEMU
