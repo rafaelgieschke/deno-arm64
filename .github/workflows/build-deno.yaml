@@ -50,6 +50,13 @@ jobs:
       - uses: docker-practice/actions-setup-docker@master
       - run: |
           cat ~/.docker/daemon.json
+          VBoxManage showvminfo default | grep Memory
+          VBoxManage showvminfo default | grep CPU
+          VBoxManage showvminfo default
+          docker-machine stop
+          VBoxManage modifyvm default --cpus 2
+          VBoxManage modifyvm default --memory 4096
+          docker-machine start
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install QEMU
