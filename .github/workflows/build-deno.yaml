@@ -50,6 +50,7 @@ jobs:
       - uses: docker-practice/actions-setup-docker@master
       - run: |
           cat ~/.docker/daemon.json
+          VBoxManage list vms
           VBoxManage showvminfo default | grep Memory
           VBoxManage showvminfo default | grep CPU
           VBoxManage showvminfo default
