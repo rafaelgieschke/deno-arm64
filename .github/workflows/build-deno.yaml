@@ -69,16 +69,14 @@ jobs:
       - run: |
           brew install lima docker
           limactl start --name=docker template://docker
-          export DOCKER_HOST="$(limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')"
-          docker run ubuntu cat /proc/cpuinfo
-          docker run ubuntu cat /proc/meminfo
+          printf 'DOCKER_HOST=%s\n' "$(limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')" >> "$GITHUB_ENV"
+      - run: docker info
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install QEMU
         uses: docker/setup-qemu-action@v1
       - name: Compile Deno
         run: |
-          export DOCKER_HOST="$(limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')"
           # eval "$(minikube docker-env)"
           platform=$(node -p "'${{ matrix.target }}'.replace(/-/g, '/')")
           echo "Building for ${platform}"
