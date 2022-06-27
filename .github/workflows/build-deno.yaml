@@ -68,7 +68,7 @@ jobs:
       #    docker info
       - run: |
           brew install lima docker
-          limactl start --name=default template://docker
+          limactl start --name=docker template://docker
           export DOCKER_HOST="$(limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')"
           docker run ubuntu cat /proc/cpuinfo
           docker run ubuntu cat /proc/meminfo
