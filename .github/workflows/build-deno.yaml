@@ -58,21 +58,28 @@ jobs:
       #    VBoxManage modifyvm default --cpus 2
       #    VBoxManage modifyvm default --memory 4096
       #    docker-machine start
+      #- run: |
+      #    brew install minikube hyperkit docker
+      #    minikube config set cpus 3
+      #    minikube config set memory 12g
+      #    minikube start --driver=hyperkit --container-runtime=docker
+      #    minikube kubectl get nodes
+      #    eval "$(minikube docker-env)"
+      #    docker info
       - run: |
-          brew install minikube hyperkit docker
-          minikube config set cpus 3
-          minikube config set memory 12g
-          minikube start --driver=hyperkit --container-runtime=docker
-          minikube kubectl get nodes
-          eval "$(minikube docker-env)"
-          docker info
+          brew install lima docker
+          limactl start --name=default template://docker
+          export DOCKER_HOST="$(limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')"
+          docker run ubuntu cat /proc/cpuinfo
+          docker run ubuntu cat /proc/meminfo
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install QEMU
         uses: docker/setup-qemu-action@v1
       - name: Compile Deno
         run: |
-          eval "$(minikube docker-env)"
+          export DOCKER_HOST="$(limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')"
+          # eval "$(minikube docker-env)"
           platform=$(node -p "'${{ matrix.target }}'.replace(/-/g, '/')")
           echo "Building for ${platform}"
           docker build -t deno-build --build-arg DENO_VERSION=${GITHUB_REF#refs/tags/} --platform=${platform} --file ./Dockerfile.compile .
