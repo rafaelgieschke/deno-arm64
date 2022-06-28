@@ -49,7 +49,7 @@ jobs:
     steps:
       - run: |
           brew install docker colima
-          colima start --cpu 3 --memory 12 --disk 100
+          colima start --cpu 3 --memory 13 --disk 100
       - name: Checkout
         uses: actions/checkout@v2
       - name: Compile Deno
